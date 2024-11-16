@@ -1,0 +1,21 @@
+{
+  "name": "tree",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "assets/app.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "typescript": "~5.6.2"
+  },
+  "dependencies": {
+    "postcss": "^8.4.49",
+    "vite": "^5.4.11",
+    "vite-plugin-live-reload": "^3.0.3",
+    "vite-plugin-php": "^1.0.67",
+    "vite-plugin-symfony": "^7.0.5"
+  }
+}

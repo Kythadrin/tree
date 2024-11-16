@@ -1,0 +1,29 @@
+extensions:
+  App\Twig\EntrypointExtension:
+    viteManifestService: '@App\Service\ViteManifestService'
+
+services:
+  App\Service\ViteManifestService:
+    arguments:
+      manifestPath: '/var/www/tree/public/build/.vite/entrypoints.json'
+
+  Twig\Loader\FilesystemLoader:
+    arguments:
+      paths: '/var/www/tree/templates'
+
+  Twig\Environment:
+    arguments:
+      loader: '@Twig\Loader\FilesystemLoader'
+      options:
+        cache: '/var/www/tree/var/cache/'
+        debug: true
+
+  App\Service\TwigExtensionLoader:
+    arguments:
+      twig: '@Twig\Environment'
+      projectDir: '/var/www/tree/'
+      container: '@service_container'
+
+  App\Controller\AbstractController:
+    arguments:
+      twig: '@Twig\Environment'

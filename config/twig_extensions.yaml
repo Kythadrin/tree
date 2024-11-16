@@ -1,0 +1,3 @@
+extensions:
+  App\Twig\EntrypointExtension:
+    viteManifestService: '@App\Service\ViteManifestService'
