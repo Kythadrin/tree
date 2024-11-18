@@ -8,13 +8,13 @@
     {{ vite_css('app') }}
 </head>
 <body>
-{% include 'parts/header.html.twig' %}
+{% include 'layout/parts/header.html.twig' %}
 
 <main>
     {% block content %}{% endblock %}
 </main>
 
-{% include 'parts/footer.html.twig' %}
+{% include 'layout/parts/footer.html.twig' %}
 
 <script type="module" crossorigin="anonymous">
     {{ vite_js('app') }}

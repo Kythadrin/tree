@@ -2,26 +2,42 @@
 
 declare(strict_types=1);
 
+namespace App;
+
 use App\Model\Routes;
-use DI\Container;
+use InvalidArgumentException;
+use LogicException;
+use Psr\Container\ContainerInterface;
+use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 
 class Router
 {
-    /** @var Routes[] $routes */
-    private array $routes = [];
-    private Container $container;
+    private const string ROUTES_CONFIG_FILE_PATH = 'config/routes.yaml';
 
-    public function __construct(string $yamlFile, Container $container)
-    {
-        $this->container = $container;
-        $this->loadRoutes($yamlFile);
+    /** @var Routes[] */
+    private array $routes = [];
+
+    public function __construct(
+        private readonly ContainerInterface $container,
+    ) {
+        $this->loadRoutes();
     }
 
-    private function loadRoutes(string $yamlFile): void
+    private function loadRoutes(): void
     {
-        $routes = Yaml::parseFile($yamlFile);
+        $routesFilePath = $this->container->get('root_path') . self::ROUTES_CONFIG_FILE_PATH;
+        if (!file_exists($routesFilePath)) {
+            throw new RuntimeException("Routes configuration file not found: {$routesFilePath}");
+        }
+
+        $routes = Yaml::parseFile($routesFilePath);
+
         foreach ($routes as $name => $route) {
+            if (!isset($route['path'], $route['controller'])) {
+                throw new InvalidArgumentException("Invalid route definition: {$name}");
+            }
+
             $this->routes[] = new Routes(
                 $name,
                 $route['path'],
@@ -41,7 +57,7 @@ class Router
         return null;
     }
 
-    public function resolveController(Routes $route)
+    public function resolveController(Routes $route): array
     {
         list($controllerClass, $method) = explode('::', $route->getController());
 
