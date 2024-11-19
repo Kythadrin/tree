@@ -6,18 +6,11 @@ namespace App\Model;
 
 class Routes
 {
-    private string $name;
-    private string $path;
-    private string $controller;
-
     public function __construct(
-        string $name,
-        string $path,
-        string $controller,
+        private string $name,
+        private string $path,
+        private string $controller,
     ) {
-        $this->name = $name;
-        $this->path = $path;
-        $this->controller = $controller;
     }
 
     public function getName(): string

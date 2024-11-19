@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Service\TwigExtensionLoader;
 use Psr\Container\ContainerInterface;;
 
 class Application
@@ -17,9 +18,13 @@ class Application
     {
         $this->initializeTwig();
 
+        /** @var Router $router */
         $router = $this->container->get(Router::class);
 
-        $requestUri = (string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $requestUri = (string) parse_url(
+            isset($_SERVER['REQUEST_URI']) && is_string($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/',
+            PHP_URL_PATH
+        );
 
         $route = $router->match($requestUri);
         if ($route !== null) {
@@ -35,7 +40,8 @@ class Application
 
     private function initializeTwig(): void
     {
-        $twigExtensionLoader = $this->container->get('App\Service\TwigExtensionLoader');
+        /** @var TwigExtensionLoader $twigExtensionLoader */
+        $twigExtensionLoader = $this->container->get(TwigExtensionLoader::class);
         $twigExtensionLoader->registerExtensions();
     }
 }

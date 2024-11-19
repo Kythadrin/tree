@@ -1,11 +1,7 @@
-extensions:
-  App\Twig\EntrypointExtension:
-    viteManifestService: '@App\Service\ViteManifestService'
-
 services:
   App\Service\ViteManifestService:
     arguments:
-      manifestPath: '/var/www/tree/public/build/.vite/entrypoints.json'
+      container: '@service_container'
 
   Twig\Loader\FilesystemLoader:
     arguments:

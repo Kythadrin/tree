@@ -11,7 +11,7 @@ use Psr\Container\ContainerInterface;
 class Bootstrap
 {
     private const string SERVICES_CONFIG_PATH = '/config/services.yaml';
-    private const string ROOT_DIR = __DIR__ . '/../';
+    private const string ROOT_DIR             = __DIR__ . '/../';
 
     public function initializeContainer(): ContainerInterface
     {
@@ -26,7 +26,7 @@ class Bootstrap
         ]);
         $containerBuilder->addDefinitions([
             Router::class => \DI\autowire()
-            ->constructorParameter('container', \DI\get(ContainerInterface::class)),
+                ->constructorParameter('container', \DI\get(ContainerInterface::class)),
         ]);
 
         return $containerBuilder->build();

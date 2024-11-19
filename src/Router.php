@@ -26,14 +26,19 @@ class Router
 
     private function loadRoutes(): void
     {
-        $routesFilePath = $this->container->get('root_path') . self::ROUTES_CONFIG_FILE_PATH;
+        /** @var string $rootPath */
+        $rootPath       = $this->container->get('root_path');
+        $routesFilePath = $rootPath . self::ROUTES_CONFIG_FILE_PATH;
+
         if (!file_exists($routesFilePath)) {
             throw new RuntimeException("Routes configuration file not found: {$routesFilePath}");
         }
 
+        /** @var array<string, array<string, string>> $routes */
         $routes = Yaml::parseFile($routesFilePath);
 
         foreach ($routes as $name => $route) {
+            /** @var string $name */
             if (!isset($route['path'], $route['controller'])) {
                 throw new InvalidArgumentException("Invalid route definition: {$name}");
             }
@@ -57,10 +62,12 @@ class Router
         return null;
     }
 
+    /** @return array{object, string} */
     public function resolveController(Routes $route): array
     {
         list($controllerClass, $method) = explode('::', $route->getController());
 
+        /** @var object $controller */
         $controller = $this->container->get($controllerClass);
 
         if (!method_exists($controller, $method)) {
