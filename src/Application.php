@@ -10,7 +10,7 @@ use Psr\Container\ContainerInterface;;
 class Application
 {
     public function __construct(
-        private readonly ContainerInterface $container
+        private readonly ContainerInterface $container,
     ) {
     }
 

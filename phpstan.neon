@@ -3,6 +3,10 @@ parameters:
     phpVersion: 80300
     paths:
         - src/
+    ignoreErrors:
+        -
+          message: '#Property [a-zA-Z0-9\\_]+::\$id is never written, only read.#'
+          path: src/Entity/*
 
 services:
     - PhpParser\PrettyPrinter\Standard
