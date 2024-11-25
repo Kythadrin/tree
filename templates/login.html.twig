@@ -14,12 +14,14 @@
         </div>
 
         <div class="button-wrapper">
-            <button class="primary" id="submit">Login</button>
+            <button class="primary" id="login">Login</button>
             <button class="secondary" id="registration">Registration</button>
         </div>
     </form>
 {% endblock %}
 
 {% block script %}
-
+    <script type="module" crossorigin="anonymous">
+        {{ vite_js('login') }}
+    </script>
 {% endblock %}

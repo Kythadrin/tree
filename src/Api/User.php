@@ -15,6 +15,33 @@ class User
     ) {
     }
 
+    public function login(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            /** @var string $data */
+            $data = file_get_contents('php://input');
+
+            /** @var string[] $input */
+            $input = json_decode($data, true);
+
+            $email = trim($input['email']);
+            $password = trim($input['password']);
+
+            if (empty($email) || empty($password)) {
+                http_response_code(400);
+                echo json_encode(['message' => 'Email and password are required']);
+                return;
+            }
+
+            $response = $this->userService->login($email, $password);
+
+            http_response_code($response->status);
+            echo json_encode([
+                'message' => $response->message,
+            ]);
+        }
+    }
+
     public function registration(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -24,31 +51,26 @@ class User
             /** @var string[] $input */
             $input = json_decode($data, true);
 
-            $email = $input['email'];
-            $password = $input['password'];
+            $email = trim($input['email']);
+            $password = trim($input['password']);
 
-            if ($email && $password) {
-                if (!$this->userService->registrate($email, $password)) {
-                    http_response_code(409);
-                    echo json_encode([
-                        'message' => 'User with this email already exist',
-                    ]);
-                    return;
-                }
-
-                $this->entityManager->flush();
-
-                http_response_code(201);
-                echo json_encode([
-                    'message' => 'Registration successful',
-                    'data' => ['email' => $email, 'password' => $password],
-                ]);
-            } else {
+            if (empty($email) || empty($password)) {
                 http_response_code(400);
-                echo json_encode([
-                    'message' => 'Invalid input, missing email or password'
-                ]);
+                echo json_encode(['message' => 'Email and password are required']);
+                return;
             }
+
+            if (!$this->userService->registrate($email, $password)) {
+                http_response_code(409);
+                echo json_encode([
+                    'message' => 'User with this email already exist',
+                ]);
+                return;
+            }
+
+            $this->entityManager->flush();
+
+            http_response_code(201);
         }
     }
 }

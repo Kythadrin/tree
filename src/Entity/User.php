@@ -45,11 +45,6 @@ class User
         $this->email = $email;
     }
 
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
     public function setPassword(string $password): void
     {
         $this->password = password_hash($password, PASSWORD_DEFAULT);

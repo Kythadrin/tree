@@ -9,3 +9,7 @@ registration:
 register:
   path: /register
   controller: App\Api\User::registration
+
+login:
+  path: /login
+  controller: App\Api\User::login
