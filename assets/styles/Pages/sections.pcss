@@ -9,20 +9,24 @@ main.sections {
 
     ul {
         list-style-type: none;
-        height: 100%;
-        margin-bottom: 20px;
+        height: 80vh;
+        margin-bottom: 10px;
+        width: max-content;
+        overflow-y: auto;
     }
 
     ul > li {
-        padding: 10px;
+        padding: 20px;
         border: 1px solid #ddd;
         border-radius: 4px;
         margin-bottom: 10px;
-        width: max-content;
+        width: 100%;
     }
 
     ul > li > ul {
         margin-top: 10px;
+        overflow-y: hidden;
+        height: min-content;
     }
 }
 

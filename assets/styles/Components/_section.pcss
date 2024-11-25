@@ -1,15 +1,39 @@
 .section-item {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 5px 0;
-    width: 420px;
+    width: 100%;
+
+    .id {
+        position: absolute;
+        right: 0;
+        top: -10px;
+        font-size: 12px;
+    }
 
     .data {
         display: flex;
         flex-direction: column;
         width: 100%;
         justify-content: space-between;
+        min-width: 220px;
+
+        &.input {
+            gap: 10px;
+
+            label {
+                display: flex;
+                font-size: 12px;
+                justify-content: space-between;
+                padding: 0 20px;
+
+                input {
+                    width: 50%;
+                }
+            }
+        }
 
         .title {
             font-weight: bold;
@@ -30,30 +54,70 @@
                 background-color: var(--color-section-edit-button);
                 mask: url("../../images/icons/edit.svg") center/contain no-repeat;
                 -webkit-mask: url("../../images/icons/edit.svg") center/contain no-repeat;
+
+                &:hover {
+                    background-color: var(--color-section-edit-button-hover);
+                }
+
+                &.selected {
+                    background-color: var(--color-section-edit-button-selected);
+                }
             }
 
             &.delete-btn {
                 background-color: var(--color-section-remove-button);
                 mask: url("../../images/icons/remove.svg") center/contain no-repeat;
                 -webkit-mask: url("../../images/icons/remove.svg") center/contain no-repeat;
+
+                &:hover {
+                    background-color: var(--color-section-remove-button-hover);
+                }
+
+                &.selected {
+                    background-color: var(--color-section-remove-button-selected);
+                }
             }
 
             &.cancel-btn {
                 background-color: var(--color-section-remove-button);
                 mask: url("../../images/icons/cancel.svg") center/contain no-repeat;
                 -webkit-mask: url("../../images/icons/cancel.svg") center/contain no-repeat;
+
+                &:hover {
+                    background-color: var(--color-section-remove-button-hover);
+                }
+
+                &.selected {
+                    background-color: var(--color-section-remove-button-selected);
+                }
             }
 
             &.add-btn {
                 background-color: var(--color-section-add-button);
                 mask: url("../../images/icons/add.svg") center/contain no-repeat;
                 -webkit-mask: url("../../images/icons/add.svg") center/contain no-repeat;
+
+                &:hover {
+                    background-color: var(--color-section-add-button-hover);
+                }
+
+                &.selected {
+                    background-color: var(--color-section-add-button-selected);
+                }
             }
 
             &.save-btn {
                 background-color: var(--color-section-add-button);
                 mask: url("../../images/icons/save.svg") center/contain no-repeat;
                 -webkit-mask: url("../../images/icons/save.svg") center/contain no-repeat;
+
+                &:hover {
+                    background-color: var(--color-section-add-button-hover);
+                }
+
+                &.selected {
+                    background-color: var(--color-section-add-button-selected);
+                }
             }
         }
     }

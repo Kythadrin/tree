@@ -9,6 +9,7 @@ interface IContainer {
 
 const createSectionItem = (id: string, title: string, content: string) => {
     return `
+        <div class="id">${id}</div>
         <div class="data">
             <span class="title">${title}</span>
             <span class="content">${content}</span>
@@ -27,10 +28,20 @@ const editSection = (button: HTMLElement) => {
     const id =  button.getAttribute('data-id');
 
     item.innerHTML = `
-        <div class="data">
-            <input class="title" value="${(item.querySelector('.title') as HTMLElement).innerText}" />
-            <input class="content" value="${(item.querySelector('.content') as HTMLElement).innerText}" />
-            <input class="parentId" value="${parentId}" />
+        <div class="id">${id}</div>
+        <div class="data input">
+            <label>
+                Title: 
+                <input class="title" value="${(item.querySelector('.title') as HTMLElement).innerText}" />
+            </label>
+            <label>
+                Content: 
+                 <input class="content" value="${(item.querySelector('.content') as HTMLElement).innerText}" />
+            </label>
+            <label>
+                Parent section id: 
+                <input class="parentId" value="${parentId}" />
+            </label>
         </div>
         <div class="button-wrapper">
             <button class="save-btn" data-id="${id}" data-action="submit-edit"></button>
@@ -92,9 +103,20 @@ const addParentSection = () => {
     const section = document.createElement("li");
     section.innerHTML = `
         <div class="section-item">
-            <div class="data">
-                <input class="title" value="" />
-                <input class="content" value="" />
+            <div class="id"></div>
+            <div class="data input">
+                <label>
+                    Title: 
+                    <input class="title" value="" />
+                </label>
+                <label>
+                    Content: 
+                    <input class="content" value="" />
+                </label>
+                <label>
+                    Parent section id: 
+                    <input class="parentId" value="" />
+                </label>
             </div>
             <div class="button-wrapper">
                 <button class="save-btn" data-action="save"></button>
@@ -119,7 +141,6 @@ const saveSection = async (button: HTMLElement) => {
 
     if (title === "" || content === "") {
         alert("Title and content can't be empty");
-
         return;
     }
 
@@ -130,15 +151,11 @@ const saveSection = async (button: HTMLElement) => {
     });
 
     if (response.ok) {
-        button.closest("li")?.remove();
-
         const data: IContainer = await response.json();
 
-        const section = document.createElement("li");
+        const section = button.closest(".section-item");
         section.setAttribute('data-id', String(data.id));
         section.innerHTML = createSectionItem(String(data.id), data.title, data.content);
-
-        document.querySelector("#sections-list").appendChild(section);
     } else {
         alert('Error adding section');
     }
