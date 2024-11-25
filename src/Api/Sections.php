@@ -38,7 +38,7 @@ class Sections
                 null,
                 trim($input['title']),
                 trim($input['content']),
-                $this->sectionRepository->findOneById($input['parent'] ?? null),
+                $this->sectionRepository->findOneById((int) $input['parent'] ?? null),
             );
 
             if (empty($section->title) || empty($section->content)) {
@@ -86,7 +86,7 @@ class Sections
                 (int) $id,
                 trim($input['title']),
                 trim($input['content']),
-                $this->sectionRepository->findOneById($input['parent'] ?? null),
+                $this->sectionRepository->findOneById((int) $input['parent'] ?? null),
             );
 
             try {
