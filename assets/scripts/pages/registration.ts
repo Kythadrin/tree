@@ -13,7 +13,7 @@ const registration = async () => {
     const email= emailElement.value;
     const password = passwordElement.value;
 
-    if (email.length === "") {
+    if (email === "") {
         const error = document.createElement('div');
         error.classList.add("error");
         error.innerText = "Field email can't be empty";
@@ -32,7 +32,7 @@ const registration = async () => {
         return;
     }
 
-    const response = await httpPostRequest("/register", {email: email, password: password});
+    const response = await httpPostRequest("/api/user", {email: email, password: password});
 
     if (response.ok) {
         document.location.href = "/?reffererUrl=registration";

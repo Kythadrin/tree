@@ -34,10 +34,10 @@ const login = async () => {
         return;
     }
 
-    const response = await httpPostRequest("/login", {email: email, password: password});
+    const response = await httpPostRequest("/api/login", {email: email, password: password});
 
     if (response.ok) {
-        console.log("logged in");
+        document.location.href = "/sections";
     } else {
         const data: {message: string} = await response.json();
 
