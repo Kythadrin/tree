@@ -28,3 +28,5 @@ dist-ssr
 /var/
 /public/build/
 /docker/db/
+
+.php-cs-fixer.cache
