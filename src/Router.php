@@ -55,10 +55,20 @@ class Router
     public function match(string $url, string $method): ?Routes
     {
         foreach ($this->routes as $route) {
+            $pathRegex = preg_replace('~\{(\w+)\}~', '(?P<$1>[^/]+)', $route->getPath());
+            $pathRegex = "~^{$pathRegex}$~";
+
             if (
-                preg_match("~^{$route->getPath()}$~", $url) &&
-                strtoupper($method) === $route->getMethod()
+                preg_match($pathRegex, $url, $matches) &&
+                strtoupper($method) === strtoupper($route->getMethod())
             ) {
+                $parameters = array_filter(
+                    $matches,
+                    fn($key) => is_string($key),
+                    ARRAY_FILTER_USE_KEY
+                );
+
+                $route->setParameters($parameters);
                 return $route;
             }
         }
@@ -77,6 +87,6 @@ class Router
             throw new LogicException("Method {$method} not found in controller {$controllerClass}.");
         }
 
-        return [$controller, $method];
+        return [$controller, $method, $route->getParameters()];
     }
 }

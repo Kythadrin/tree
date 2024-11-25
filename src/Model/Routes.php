@@ -6,11 +6,13 @@ namespace App\Model;
 
 class Routes
 {
+    /** @param string[] $parameters */
     public function __construct(
         private string $name,
         private string $path,
         private string $controller,
         private string $method,
+        private array $parameters = [],
     ) {
     }
 
@@ -52,5 +54,17 @@ class Routes
     public function setMethod(string $method): void
     {
         $this->method = $method;
+    }
+
+    /** @param string[] $parameters */
+    public function setParameters(array $parameters): void
+    {
+        $this->parameters = $parameters;
+    }
+
+    /** @return string[] */
+    public function getParameters(): array
+    {
+        return $this->parameters;
     }
 }

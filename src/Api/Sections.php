@@ -50,6 +50,7 @@ class Sections
                 echo json_encode([
                     'message' => $exception->getMessage(),
                 ]);
+                return;
             }
 
             http_response_code(201);
@@ -67,8 +68,32 @@ class Sections
 
     }
 
-    public function delete(): void
+    /** @param string[] $parameters */
+    public function delete(array $parameters): void
     {
+        if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+            $id = $parameters['id'];
+            if ($id === null) {
+                http_response_code(400);
+                echo json_encode([
+                    'message' => 'Id not passed',
+                ]);
+                return;
+            }
 
+            try {
+                $this->sectionService->remove((int) $id);
+
+                $this->entityManager->flush();
+            } catch (Exception $exception) {
+                http_response_code(500);
+                echo json_encode([
+                    'message' => $exception->getMessage(),
+                ]);
+                return;
+            }
+
+            http_response_code(204);
+        }
     }
 }

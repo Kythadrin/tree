@@ -31,7 +31,7 @@ const deleteSection = async (button: HTMLElement) => {
     const sectionId = button.getAttribute('data-id');
     const sectionElement = button.closest('li');
 
-    if (confirm('Are you sure you want to delete this section?')) {
+    if (confirm('Are you sure you want to delete this section? All child sections will be delete too.')) {
         const response = await httpDeleteRequest(`/section/${sectionId}`);
 
         if (response.ok) {
@@ -48,8 +48,8 @@ const addParentSection = () => {
         <div class="section-item">
             <input class="title" data-title />
             <input class="content" data-content />
-            <button class="save-btn" data-action="save">+</button>
-            <button class="delete-btn" data-action="remove">-</button>
+            <button class="save-btn" data-action="save"></button>
+            <button class="delete-btn" data-action="remove"></button>
         </div>
     `;
 
@@ -85,9 +85,9 @@ const saveSection = async (button: HTMLElement) => {
                     <span class="content">${data.content}</span>
                 </div>
                 <div class="button-wrapper">
-                    <button class="edit-btn" data-id="${data.id}" data-action="edit">*</button>
-                    <button class="delete-btn" data-id="${data.id}" data-action="remove">-</button>
-                    <button class="add-btn" data-id="${data.id}" data-action="add-child">+</button>
+                    <button class="edit-btn" data-id="${data.id}" data-action="edit"></button>
+                    <button class="delete-btn" data-id="${data.id}" data-action="delete"></button>
+                    <button class="add-btn" data-id="${data.id}" data-action="add-child"></button>
                 </div>
             </div>
             <ul></ul>
@@ -115,11 +115,11 @@ document.addEventListener('DOMContentLoaded', function () {
             case "save":
                 saveSection(target).then();
                 break;
-
-
             case "delete":
                 deleteSection(target).then();
                 break;
+
+
             case "edit":
                 editSection(target).then();
                 break;

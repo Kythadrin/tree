@@ -28,8 +28,8 @@ class Application
 
         $route = $router->match($requestUri, $_SERVER['REQUEST_METHOD']);
         if ($route !== null) {
-            list($controller, $method) = $router->resolveController($route);
-            $controller->$method();
+            list($controller, $method, $parameters) = $router->resolveController($route);
+            $controller->$method($parameters);
         } else {
             http_response_code(404);
             echo '404 Not Found';

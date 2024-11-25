@@ -6,6 +6,7 @@ namespace App\Api;
 
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class User
 {
@@ -60,15 +61,24 @@ class User
                 return;
             }
 
-            if (!$this->userService->registrate($email, $password)) {
-                http_response_code(409);
+            try {
+                if (!$this->userService->registrate($email, $password)) {
+                    http_response_code(409);
+                    echo json_encode([
+                        'message' => 'User with this email already exist',
+                    ]);
+                    return;
+                }
+
+                $this->entityManager->flush();
+            } catch (Exception $exception) {
+                http_response_code(500);
                 echo json_encode([
-                    'message' => 'User with this email already exist',
+                    'message' => $exception->getMessage(),
                 ]);
                 return;
             }
 
-            $this->entityManager->flush();
 
             http_response_code(201);
         }

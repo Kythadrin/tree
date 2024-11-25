@@ -38,7 +38,18 @@ class SectionService
     {
         $section = $this->sectionRepository->findOneById($id);
 
-        $section->getParent()?->removeChild($section);
+        $this->deleteChildren($section);
+
+        $this->entityManager->remove($section);
+    }
+
+    private function deleteChildren(Section $section): void
+    {
+        foreach ($section->getChildren() as $child) {
+            $this->deleteChildren($child);
+
+            $this->entityManager->remove($child);
+        }
     }
 
     public function edit(int $id, SectionModel $sectionData): Section
