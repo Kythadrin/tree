@@ -1,0 +1,24 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block content %}
+    <h1>Registration Form</h1>
+
+    <form id="registrationForm">
+        <div class="form-element">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email">
+        </div>
+        <div class="form-element">
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password">
+        </div>
+
+        <button id="submit">Register</button>
+    </form>
+{% endblock %}
+
+{% block script %}
+    <script type="module" crossorigin="anonymous">
+        {{ vite_js('registration') }}
+    </script>
+{% endblock %}

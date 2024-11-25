@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App;
 
 use App\Service\TwigExtensionLoader;
+use App\Service\UserService;
 use DI\ContainerBuilder;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\ORMSetup;
 use Dotenv\Dotenv;
 use LogicException;
@@ -18,8 +20,8 @@ use function DI\string;
 class Bootstrap
 {
     private const string ROOT_DIR      = __DIR__ . '/../';
-    private const string SRC_PATH      = __DIR__ . '/../src';
-    private const string SRC_NAMESPACE = 'App\\';
+    private const string SRC_PATH      = __DIR__;
+    private const string SRC_NAMESPACE = 'App';
 
     public function initializeContainer(): ContainerInterface
     {
@@ -37,7 +39,6 @@ class Bootstrap
             },
             TwigExtensionLoader::class => \DI\autowire()
                 ->constructorParameter('twig', \DI\get(\Twig\Environment::class))
-                ->constructorParameter('projectDir', self::ROOT_DIR)
                 ->constructorParameter('container', \DI\get(ContainerInterface::class)),
             EntityManagerInterface::class => function () {
                 $config = ORMSetup::createAttributeMetadataConfiguration(

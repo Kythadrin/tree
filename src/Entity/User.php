@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: "users")]
 class User
 {
@@ -20,6 +21,14 @@ class User
 
     #[ORM\Column(type: "string", length: 255)]
     private string $password;
+
+    public function __construct(
+        string $email,
+        string $password,
+    ) {
+        $this->setEmail($email);
+        $this->setPassword($password);
+    }
 
     public function getId(): int
     {
@@ -43,6 +52,11 @@ class User
 
     public function setPassword(string $password): void
     {
-        $this->password = $password;
+        $this->password = password_hash($password, PASSWORD_DEFAULT);
+    }
+
+    public function verifyPassword(string $plainPassword): bool
+    {
+        return password_verify($plainPassword, $this->password);
     }
 }

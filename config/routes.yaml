@@ -1,3 +1,11 @@
 home:
   path: /
   controller: App\Controller\HomeController::index
+
+registration:
+  path: /registration
+  controller: App\Controller\RegistrationController::index
+
+register:
+  path: /register
+  controller: App\Api\User::registration

@@ -9,6 +9,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 app: 'assets/app.js',
+                registration: 'assets/scripts/registration.ts',
             },
         }
     },

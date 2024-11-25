@@ -6,6 +6,9 @@ namespace App;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use LogicException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -53,9 +56,35 @@ class AutowireRegistrar
                         $containerBuilder->addDefinitions([
                             $className => \DI\autowire(),
                         ]);
+                    } elseif (self::isDoctrineRepository($reflection)) {
+                        $containerBuilder->addDefinitions([
+                            $className => function (EntityManagerInterface $entityManager) use ($className) {
+                                $metadata = self::getClassMetadata($entityManager, $className);
+                                return new $className($entityManager, $metadata);
+                            },
+                        ]);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * @template T of object
+     * @param ReflectionClass<T> $reflection
+     */
+    private static function isDoctrineRepository(ReflectionClass $reflection): bool
+    {
+        return $reflection->isSubclassOf(EntityRepository::class);
+    }
+
+    /**
+     * @template T of object
+     * @param class-string<T> $className
+     * @return ClassMetadata<T>
+     */
+    private static function getClassMetadata(EntityManagerInterface $entityManager, string $className): ClassMetadata
+    {
+        return $entityManager->getClassMetadata($className);
     }
 }

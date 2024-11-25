@@ -11,12 +11,12 @@ use LogicException;
 use Symfony\Component\Yaml\Yaml;
 use Psr\Container\ContainerInterface;
 use Twig\Extension\ExtensionInterface;
+use function DI\string;
 
 class TwigExtensionLoader
 {
     public function __construct(
         private readonly TwigEnvironment $twig,
-        private readonly string $projectDir,
         private readonly ContainerInterface $container,
     ) {
     }
@@ -24,7 +24,9 @@ class TwigExtensionLoader
     /** @throws LogicException */
     public function registerExtensions(): void
     {
-        $configPath = $this->projectDir . '/config/twig_extensions.yaml';
+        /** @var string $rootPath */
+        $rootPath   = $this->container->get('root_path');
+        $configPath = $rootPath . '/config/twig_extensions.yaml';
 
         if (!file_exists($configPath)) {
             throw new LogicException("Twig extensions configuration file not found at $configPath.");
