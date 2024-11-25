@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Api;
 
 use App\Service\UserService;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use http\Encoding\Stream;
 
 class User
 {
@@ -26,11 +24,17 @@ class User
             /** @var string[] $input */
             $input = json_decode($data, true);
 
-            $email    = $input['email'];
+            $email = $input['email'];
             $password = $input['password'];
 
             if ($email && $password) {
-                $this->userService->registrate($email, $password);
+                if (!$this->userService->registrate($email, $password)) {
+                    http_response_code(409);
+                    echo json_encode([
+                        'message' => 'User with this email already exist',
+                    ]);
+                    return;
+                }
 
                 $this->entityManager->flush();
 
