@@ -4,6 +4,7 @@ const formElement = document.querySelector("#registrationForm");
 const emailElement = formElement.querySelector("#email") as HTMLInputElement;
 const passwordElement = formElement.querySelector("#password") as HTMLInputElement;
 const submitButtonElement = formElement.querySelector("#submit");
+const backButtonElement = formElement.querySelector("#back");
 
 const registration = async () => {
     formElement.querySelectorAll(".error").forEach((item) => {
@@ -54,6 +55,9 @@ document.addEventListener("click", (event: MouseEvent) => {
     switch (target) {
         case submitButtonElement:
             registration();
+            break;
+        case backButtonElement:
+            document.location.href = '/';
             break;
     }
 })
