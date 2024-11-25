@@ -9,7 +9,7 @@ class HomeController extends AbstractController
     public function index(): void
     {
         $this->render('login.html.twig', [
-            "pageClass" => 'login',
+            'pageClass' => 'login',
         ]);
     }
 }

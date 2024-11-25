@@ -47,14 +47,18 @@ class Router
                 $name,
                 $route['path'],
                 $route['controller'],
+                $route['method'] ?? 'GET',
             );
         }
     }
 
-    public function match(string $url): ?Routes
+    public function match(string $url, string $method): ?Routes
     {
         foreach ($this->routes as $route) {
-            if (preg_match("~^{$route->getPath()}$~", $url)) {
+            if (
+                preg_match("~^{$route->getPath()}$~", $url) &&
+                strtoupper($method) === $route->getMethod()
+            ) {
                 return $route;
             }
         }
@@ -67,7 +71,6 @@ class Router
     {
         list($controllerClass, $method) = explode('::', $route->getController());
 
-        /** @var object $controller */
         $controller = $this->container->get($controllerClass);
 
         if (!method_exists($controller, $method)) {

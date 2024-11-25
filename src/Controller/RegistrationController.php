@@ -13,7 +13,7 @@ class RegistrationController extends AbstractController
     public function index(): void
     {
         $this->render('registration.html.twig', [
-            "pageClass" => 'registration',
+            'pageClass' => 'registration',
         ]);
     }
 }

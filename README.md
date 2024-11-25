@@ -12,7 +12,7 @@ docker-compose up
 ```
 composer install && npm install
 npm run build
-bin/doctrine.php orm:schema-tool:update --force
+bin/doctrine.php orm:schema-tool:create --force
 ```
 
 Once all these steps have been completed, the application will be available at: http://127.0.0.1:8080/

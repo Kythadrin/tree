@@ -26,7 +26,7 @@ class Application
             PHP_URL_PATH
         );
 
-        $route = $router->match($requestUri);
+        $route = $router->match($requestUri, $_SERVER['REQUEST_METHOD']);
         if ($route !== null) {
             list($controller, $method) = $router->resolveController($route);
             $controller->$method();

@@ -10,6 +10,7 @@ class Routes
         private string $name,
         private string $path,
         private string $controller,
+        private string $method,
     ) {
     }
 
@@ -41,5 +42,15 @@ class Routes
     public function setController(string $controller): void
     {
         $this->controller = $controller;
+    }
+
+    public function getMethod(): string
+    {
+        return $this->method;
+    }
+
+    public function setMethod(string $method): void
+    {
+        $this->method = $method;
     }
 }

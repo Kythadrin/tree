@@ -1,15 +1,39 @@
 home:
   path: /
   controller: App\Controller\HomeController::index
+  method: GET
 
 registration:
   path: /registration
   controller: App\Controller\RegistrationController::index
+  method: GET
+
+sections:
+  path: /sections
+  controller: App\Controller\SectionsController::index
+  method: GET
 
 register:
-  path: /register
+  path: /api/user
   controller: App\Api\User::registration
+  method: POST
 
 login:
-  path: /login
+  path: /api/login
   controller: App\Api\User::login
+  method: POST
+
+createSection:
+  path: /api/section
+  controller: App\Api\Sections::create
+  method: POST
+
+editSection:
+  path: /api/section/{id}
+  controller: App\Api\Sections::edit
+  method: PUT
+
+deleteSection:
+  path: /section/{id}
+  controller: App\Api\Sections::delete
+  method: DELETE
