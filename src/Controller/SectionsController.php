@@ -25,6 +25,10 @@ class SectionsController extends AbstractController
 
     public function index(): void
     {
+        if (!$this->isAuthenticated()) {
+            $this->redirect('/');
+        }
+
         $this->render('sections.html.twig', [
             'pageClass' => 'sections',
             'sections' => $this->sectionRepository->findAll(),

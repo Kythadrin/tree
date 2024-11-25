@@ -28,6 +28,7 @@ class UserService
             return new Response("Invalid credentials", 401);
         }
 
+        $_SESSION['user'] = $user->getId();
         return new Response("", 201);
     }
 

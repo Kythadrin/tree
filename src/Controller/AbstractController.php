@@ -23,4 +23,10 @@ abstract class AbstractController
     {
         return isset($_SESSION['user']);
     }
+
+    protected function redirect(string $url): void
+    {
+        header("Location: $url");
+        exit();
+    }
 }
