@@ -4,7 +4,9 @@
     <h1>Sections Tree</h1>
     <ul id="sections-list">
         {% for section in sections %}
-            {% include 'components/_section.html.twig' with {'section': section} %}
+            {% if section.parent is null %}
+                {% include 'components/_section.html.twig' with {'section': section} %}
+            {% endif %}
         {% endfor %}
     </ul>
     <button class="primary" data-action="add-parent">Create section</button>
