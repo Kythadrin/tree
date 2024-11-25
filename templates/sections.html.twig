@@ -9,7 +9,10 @@
             {% endif %}
         {% endfor %}
     </ul>
-    <button class="primary" data-action="add-parent">Create section</button>
+    <div class="button-wrapper">
+        <button class="primary" data-action="add-parent">Create section</button>
+        <button class="secondary" data-action="logout">Log out</button>
+    </div>
 {% endblock %}
 
 {% block script %}

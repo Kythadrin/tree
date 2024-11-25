@@ -12,14 +12,14 @@ export async function httpGetRequest(url: string): Promise<Response> {
     }
 }
 
-export async function httpPostRequest(url: string, data: any): Promise<Response> {
+export async function httpPostRequest(url: string, data?: any): Promise<Response> {
     try {
         return await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(data ?? ""),
         });
     } catch (error) {
         console.error('There was an error with the POST request:', error);

@@ -23,6 +23,11 @@ login:
   controller: App\Api\User::login
   method: POST
 
+logout:
+  path: /api/logout
+  controller: App\Api\User::logout
+  method: POST
+
 createSection:
   path: /api/section
   controller: App\Api\Sections::create

@@ -43,6 +43,15 @@ class User
         }
     }
 
+    public function logout(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            unset($_SESSION['user']);
+
+            http_response_code(201);
+        }
+    }
+
     public function registration(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

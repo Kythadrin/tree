@@ -11,8 +11,14 @@ main.sections {
         list-style-type: none;
         height: 80vh;
         margin-bottom: 10px;
+        min-width: 360px;
         width: max-content;
         overflow-y: auto;
+
+        @media (--phone) {
+            width: 100%;
+            min-width: unset;
+        }
     }
 
     ul > li {
@@ -27,6 +33,13 @@ main.sections {
         margin-top: 10px;
         overflow-y: hidden;
         height: min-content;
+    }
+
+    > .button-wrapper {
+        max-width: 400px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
     }
 }
 

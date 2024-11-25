@@ -221,6 +221,16 @@ const addChildSection = (button: HTMLButtonElement) => {
     document.querySelector(`#child-list-${parentId}`).appendChild(section);
 }
 
+const logout = async () => {
+    const response = await httpPostRequest("/api/logout");
+
+    if (response.ok) {
+        document.location.href = "/";
+    } else {
+        alert("User not logged out. Try again");
+    }
+};
+
 document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("click", (event: MouseEvent) => {
         event.preventDefault();
@@ -250,6 +260,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 break;
             case "add-child":
                 addChildSection(target as HTMLButtonElement);
+                break;
+            case "logout":
+
                 break;
         }
     });
