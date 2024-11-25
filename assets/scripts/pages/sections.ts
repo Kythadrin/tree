@@ -72,7 +72,7 @@ const submitEdit = async (button: HTMLButtonElement) => {
 
     if (id === "" || title === "" || content === "") {
         alert("Id, title and content can't be blank");
-
+        button.disabled = false
         return;
     }
 
@@ -160,6 +160,7 @@ const saveSection = async (button: HTMLButtonElement) => {
 
     if (title === "" || content === "") {
         alert("Title and content can't be empty");
+        button.disabled = false
         return;
     }
 
