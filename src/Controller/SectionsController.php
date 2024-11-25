@@ -19,7 +19,7 @@ class SectionsController extends AbstractController
     ) {
         parent::__construct($twig);
         /** @var SectionRepository $sectionRepository */
-        $sectionRepository = $this->entityManager->getRepository(Section::class);
+        $sectionRepository       = $this->entityManager->getRepository(Section::class);
         $this->sectionRepository = $sectionRepository;
     }
 

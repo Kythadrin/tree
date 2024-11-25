@@ -21,7 +21,7 @@ class Sections
         private readonly EntityManagerInterface $entityManager,
     ) {
         /** @var SectionRepository $sectionRepository */
-        $sectionRepository = $this->entityManager->getRepository(Section::class);
+        $sectionRepository       = $this->entityManager->getRepository(Section::class);
         $this->sectionRepository = $sectionRepository;
     }
 
@@ -38,7 +38,7 @@ class Sections
                 null,
                 trim($input['title']),
                 trim($input['content']),
-                $this->sectionRepository->findOneById((int) $input['parent']),
+                $this->sectionRepository->findOneById($input['parent'] ?? null),
             );
 
             if (empty($section->title) || empty($section->content)) {
@@ -65,7 +65,7 @@ class Sections
                 $createdSection->getId(),
                 $createdSection->getTitle(),
                 $createdSection->getContent(),
-                $createdSection->getParent()->getId(),
+                $createdSection->getParent()?->getId(),
             ));
         }
     }
@@ -75,13 +75,6 @@ class Sections
     {
         if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
             $id = $parameters['id'];
-            if ($id === null) {
-                http_response_code(400);
-                echo json_encode([
-                    'message' => 'Id not passed',
-                ]);
-                return;
-            }
 
             /** @var string $data */
             $data = file_get_contents('php://input');
@@ -93,7 +86,7 @@ class Sections
                 (int) $id,
                 trim($input['title']),
                 trim($input['content']),
-                $this->sectionRepository->findOneById((int) $input['parent']),
+                $this->sectionRepository->findOneById($input['parent'] ?? null),
             );
 
             try {
@@ -112,7 +105,7 @@ class Sections
                 $updatedSection->getId(),
                 $updatedSection->getTitle(),
                 $updatedSection->getContent(),
-                $updatedSection->getParent()->getId(),
+                $updatedSection->getParent()?->getId(),
             ));
         }
     }
@@ -122,13 +115,6 @@ class Sections
     {
         if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
             $id = $parameters['id'];
-            if ($id === null) {
-                http_response_code(400);
-                echo json_encode([
-                    'message' => 'Id not passed',
-                ]);
-                return;
-            }
 
             try {
                 $this->sectionService->remove((int) $id);

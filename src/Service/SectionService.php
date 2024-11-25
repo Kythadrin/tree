@@ -8,6 +8,7 @@ use App\Entity\Section;
 use App\Model\Section as SectionModel;
 use App\Repository\SectionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use RuntimeException;
 
 class SectionService
 {
@@ -17,16 +18,16 @@ class SectionService
         private readonly EntityManagerInterface $entityManager,
     ) {
         /** @var SectionRepository $sectionRepository */
-        $sectionRepository = $this->entityManager->getRepository(Section::class);
+        $sectionRepository       = $this->entityManager->getRepository(Section::class);
         $this->sectionRepository = $sectionRepository;
     }
 
     public function create(SectionModel $sectionData): Section
     {
         $section = new Section(
-            $sectionData->title,
-            $sectionData->content,
-            $sectionData->parent,
+            $sectionData->title ?? "",
+            $sectionData->content ?? "",
+            $sectionData->parent ?? null,
         );
 
         $this->entityManager->persist($section);
@@ -37,6 +38,9 @@ class SectionService
     public function remove(int $id): void
     {
         $section = $this->sectionRepository->findOneById($id);
+        if ($section === null) {
+            throw new RuntimeException("Section not found");
+        }
 
         $this->deleteChildren($section);
 
@@ -55,6 +59,9 @@ class SectionService
     public function edit(int $id, SectionModel $sectionData): Section
     {
         $section = $this->sectionRepository->findOneById($id);
+        if ($section === null) {
+            throw new RuntimeException("Section not found");
+        }
 
         if ($sectionData->title !== null) {
             $section->setTitle($sectionData->title);

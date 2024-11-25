@@ -19,7 +19,7 @@ class SectionRepository extends EntityRepository
         parent::__construct($entityManager, $class);
     }
 
-    public function findOneById(int $id): ?Section
+    public function findOneById(?int $id): ?Section
     {
         /** @var ?Section $section */
         $section = $this->createQueryBuilder('s')

@@ -17,7 +17,7 @@ class UserService
         private readonly EntityManagerInterface $entityManager,
     ) {
         /** @var UserRepository $userRepository */
-        $userRepository = $this->entityManager->getRepository(User::class);
+        $userRepository       = $this->entityManager->getRepository(User::class);
         $this->userRepository = $userRepository;
     }
 

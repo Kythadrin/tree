@@ -76,11 +76,12 @@ class Router
         return null;
     }
 
-    /** @return array{object, string} */
+    /** @return array{object, string, string[]} */
     public function resolveController(Routes $route): array
     {
         list($controllerClass, $method) = explode('::', $route->getController());
 
+        /** @var object $controller */
         $controller = $this->container->get($controllerClass);
 
         if (!method_exists($controller, $method)) {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Service\TwigExtensionLoader;
+use LogicException;
 use Psr\Container\ContainerInterface;;
 
 class Application
@@ -26,7 +27,12 @@ class Application
             PHP_URL_PATH
         );
 
-        $route = $router->match($requestUri, $_SERVER['REQUEST_METHOD']);
+        $route = $router->match(
+            $requestUri,
+            is_string($_SERVER['REQUEST_METHOD'])
+                ? $_SERVER['REQUEST_METHOD']
+                : throw new LogicException("Requested method not exist or not string")
+        );
         if ($route !== null) {
             list($controller, $method, $parameters) = $router->resolveController($route);
             $controller->$method($parameters);

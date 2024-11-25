@@ -25,7 +25,7 @@ class User
             /** @var string[] $input */
             $input = json_decode($data, true);
 
-            $email = trim($input['email']);
+            $email    = trim($input['email']);
             $password = trim($input['password']);
 
             if (empty($email) || empty($password)) {
@@ -52,7 +52,7 @@ class User
             /** @var string[] $input */
             $input = json_decode($data, true);
 
-            $email = trim($input['email']);
+            $email    = trim($input['email']);
             $password = trim($input['password']);
 
             if (empty($email) || empty($password)) {

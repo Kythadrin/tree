@@ -28,6 +28,7 @@ class Section
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Section $parent;
 
+    /** @var Collection<int, Section> */
     #[ORM\OneToMany(targetEntity: Section::class, mappedBy: "parent", cascade: ["persist", "remove"], orphanRemoval: true)]
     private Collection $children;
 
@@ -36,10 +37,10 @@ class Section
         string $content,
         ?Section $parent = null
     ) {
-        $this->title = $title;
-        $this->content = $content;
+        $this->title    = $title;
+        $this->content  = $content;
         $this->children = new ArrayCollection();
-        $this->parent = $parent;
+        $this->parent   = $parent;
     }
 
     public function getId(): int
@@ -77,9 +78,7 @@ class Section
         $this->parent = $parent;
     }
 
-    /**
-     * @return Collection
-     */
+    /** @return Collection<int, Section> */
     public function getChildren(): Collection
     {
         return $this->children;
