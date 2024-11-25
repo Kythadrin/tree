@@ -11,6 +11,7 @@ export default defineConfig({
                 app: 'assets/app.js',
                 registration: 'assets/scripts/pages/registration.ts',
                 login: 'assets/scripts/pages/login.ts',
+                sections: 'assets/scripts/pages/sections.ts',
             },
         }
     },

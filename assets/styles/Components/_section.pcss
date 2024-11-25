@@ -1,0 +1,48 @@
+.section-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    width: 420px;
+
+    .data {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        justify-content: space-between;
+
+        .title {
+            font-weight: bold;
+        }
+    }
+
+
+    .button-wrapper {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+
+        button {
+            padding: 15px;
+            background-color: transparent;
+
+            &.edit-btn {
+                content: "";
+                background-image: url("../../images/icons/edit.svg");
+                background-repeat: no-repeat;
+            }
+
+            &.delete-btn {
+                content: "";
+                background-image: url("../../images/icons/remove.svg");
+                background-repeat: no-repeat;
+            }
+
+            &.add-btn {
+                content: "";
+                background-image: url("../../images/icons/add.svg");
+                background-repeat: no-repeat;
+            }
+        }
+    }
+}

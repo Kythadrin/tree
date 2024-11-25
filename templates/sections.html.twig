@@ -1,0 +1,17 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block content %}
+    <h1>Sections Tree</h1>
+    <ul id="sections-list">
+        {% for section in sections %}
+            {% include 'components/_section.html.twig' with {'section': section} %}
+        {% endfor %}
+    </ul>
+    <button class="primary" data-action="add-parent">Create section</button>
+{% endblock %}
+
+{% block script %}
+    <script type="module" crossorigin="anonymous">
+        {{ vite_js('sections') }}
+    </script>
+{% endblock %}

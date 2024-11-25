@@ -1,0 +1,21 @@
+<li id="section-{{ section.id }}" data-id="{{ section.id }}">
+    <div class="section-item">
+        <div class="data">
+            <span class="title">{{ section.title }}</span>
+            <span class="content">{{ section.content }}</span>
+        </div>
+        <div class="button-wrapper">
+            <button class="edit-btn" data-id="{{ section.id }}" data-action="edit"></button>
+            <button class="delete-btn" data-id="{{ section.id }}" data-action="remove"></button>
+            <button class="add-btn" data-id="{{ section.id }}" data-action="add-child"></button>
+        </div>
+    </div>
+
+    {% if section.subsections is not empty %}
+        <ul>
+            {% for subsection in section.subsections %}
+                {% include 'sections/_section.html.twig' with {'section': subsection} %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+</li>

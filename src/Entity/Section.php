@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\SectionRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: SectionRepository::class)]
 #[ORM\Table(name: "sections")]
 class Section
 {
