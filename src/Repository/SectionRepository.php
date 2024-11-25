@@ -31,4 +31,17 @@ class SectionRepository extends EntityRepository
 
         return $section;
     }
+
+    /** @return Section[] */
+    public function findAll(): array
+    {
+        /** @var Section[] $section */
+        $section = $this->createQueryBuilder('s')
+            ->addOrderBy('s.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $section;
+    }
 }

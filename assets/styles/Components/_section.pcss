@@ -27,21 +27,33 @@
             background-color: transparent;
 
             &.edit-btn {
-                content: "";
-                background-image: url("../../images/icons/edit.svg");
-                background-repeat: no-repeat;
+                background-color: var(--color-section-edit-button);
+                mask: url("../../images/icons/edit.svg") center/contain no-repeat;
+                -webkit-mask: url("../../images/icons/edit.svg") center/contain no-repeat;
             }
 
             &.delete-btn {
-                content: "";
-                background-image: url("../../images/icons/remove.svg");
-                background-repeat: no-repeat;
+                background-color: var(--color-section-remove-button);
+                mask: url("../../images/icons/remove.svg") center/contain no-repeat;
+                -webkit-mask: url("../../images/icons/remove.svg") center/contain no-repeat;
+            }
+
+            &.cancel-btn {
+                background-color: var(--color-section-remove-button);
+                mask: url("../../images/icons/cancel.svg") center/contain no-repeat;
+                -webkit-mask: url("../../images/icons/cancel.svg") center/contain no-repeat;
             }
 
             &.add-btn {
-                content: "";
-                background-image: url("../../images/icons/add.svg");
-                background-repeat: no-repeat;
+                background-color: var(--color-section-add-button);
+                mask: url("../../images/icons/add.svg") center/contain no-repeat;
+                -webkit-mask: url("../../images/icons/add.svg") center/contain no-repeat;
+            }
+
+            &.save-btn {
+                background-color: var(--color-section-add-button);
+                mask: url("../../images/icons/save.svg") center/contain no-repeat;
+                -webkit-mask: url("../../images/icons/save.svg") center/contain no-repeat;
             }
         }
     }

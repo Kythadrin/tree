@@ -1,4 +1,4 @@
-<li id="section-{{ section.id }}" data-id="{{ section.id }}">
+<li id="section-{{ section.id }}" data-parent-id="{{ section.parent.id }}">
     <div class="section-item">
         <div class="data">
             <span class="title">{{ section.title }}</span>
@@ -6,15 +6,15 @@
         </div>
         <div class="button-wrapper">
             <button class="edit-btn" data-id="{{ section.id }}" data-action="edit"></button>
-            <button class="delete-btn" data-id="{{ section.id }}" data-action="delete"></button>
             <button class="add-btn" data-id="{{ section.id }}" data-action="add-child"></button>
+            <button class="delete-btn" data-id="{{ section.id }}" data-action="delete"></button>
         </div>
     </div>
 
-    {% if section.subsections is not empty %}
-        <ul>
-            {% for subsection in section.subsections %}
-                {% include 'sections/_section.html.twig' with {'section': subsection} %}
+    {% if section.children is not empty %}
+        <ul id="child-list">
+            {% for child in section.children %}
+                {% include 'components/_section.html.twig' with {'section': child} %}
             {% endfor %}
         </ul>
     {% endif %}

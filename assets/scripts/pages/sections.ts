@@ -1,4 +1,4 @@
-import {httpDeleteRequest, httpPostRequest} from "../utils/http-requests.ts";
+import {httpDeleteRequest, httpPostRequest, httpPutRequest} from "../utils/http-requests.ts";
 
 interface IContainer {
     id: number,
@@ -7,23 +7,69 @@ interface IContainer {
     parent?: IContainer,
 }
 
-const editSection = async (button: HTMLElement) => {
-    const sectionId = button.getAttribute('data-id');
-    const sectionTitle = (button.closest('li').querySelector('.section-title') as HTMLElement).innerText;
-    const sectionDescription =  (button.closest('li').querySelector('.section-description') as HTMLElement).innerText;
+const createSectionItem = (id: string, title: string, content: string) => {
+    return `
+        <div class="data">
+            <span class="title">${title}</span>
+            <span class="content">${content}</span>
+        </div>
+        <div class="button-wrapper">
+            <button class="edit-btn" data-id="${id}" data-action="edit"></button>
+            <button class="add-btn" data-id="${id}" data-action="add-child"></button>
+            <button class="delete-btn" data-id="${id}" data-action="delete"></button>
+        </div>
+    `;
+};
 
-    const newTitle = prompt('Edit title', sectionTitle);
-    const newDescription = prompt('Edit description', sectionDescription);
+const editSection = (button: HTMLElement) => {
+    const parentId = button.closest("li").getAttribute('data-id') ?? null;
+    const item = button.closest(".section-item");
+    const id =  button.getAttribute('data-id');
 
-    if (newTitle && newDescription) {
-        const response = await httpPostRequest(`/sections/edit/${sectionId}`,{ title: newTitle, description: newDescription })
+    item.innerHTML = `
+        <div class="data">
+            <input class="title" value="${(item.querySelector('.title') as HTMLElement).innerText}" />
+            <input class="content" value="${(item.querySelector('.content') as HTMLElement).innerText}" />
+            <input class="parentId" value="${parentId}" />
+        </div>
+        <div class="button-wrapper">
+            <button class="save-btn" data-id="${id}" data-action="submit-edit"></button>
+            <button class="cancel-btn" data-id="${id}" data-action="cancel-edit"></button>
+        </div>
+    `;
+};
 
-        if (response.ok) {
-            (button.closest('li').querySelector('.section-title') as HTMLElement).innerText = newTitle;
-            (button.closest('li').querySelector('.section-description') as HTMLElement).innerText = newDescription;
-        } else {
-            alert('Error editing section');
-        }
+const cancelEdit = (button: HTMLElement) => {
+    const item = button.closest(".section-item");
+
+    item.innerHTML = createSectionItem(
+        button.getAttribute('data-id'),
+        (item.querySelector('.title') as HTMLInputElement).value,
+        (item.querySelector('.content') as HTMLInputElement).value,
+    );
+};
+
+const submitEdit = async (button: HTMLElement) => {
+    const item = button.closest(".section-item");
+    const id = button.getAttribute('data-id');
+    const title = (item.querySelector('.title') as HTMLInputElement).value;
+    const content = (item.querySelector('.content') as HTMLInputElement).value;
+    const parentId = (item.querySelector('.parentId') as HTMLInputElement).value;
+
+    if (id === "" || title === "" || content === "") {
+        alert("Id, title and content can't be blank");
+
+        return;
+    }
+
+    const response = await httpPutRequest(`/api/section/${id}`,{ title: title, content: content, parent: parentId })
+
+    if (response.ok) {
+        const data: IContainer = await response.json();
+
+        item.innerHTML = createSectionItem(String(data.id), data.title, data.content);
+    } else {
+        alert('Error editing section');
     }
 };
 
@@ -32,7 +78,7 @@ const deleteSection = async (button: HTMLElement) => {
     const sectionElement = button.closest('li');
 
     if (confirm('Are you sure you want to delete this section? All child sections will be delete too.')) {
-        const response = await httpDeleteRequest(`/section/${sectionId}`);
+        const response = await httpDeleteRequest(`/api/section/${sectionId}`);
 
         if (response.ok) {
             sectionElement.remove();
@@ -46,11 +92,17 @@ const addParentSection = () => {
     const section = document.createElement("li");
     section.innerHTML = `
         <div class="section-item">
-            <input class="title" data-title />
-            <input class="content" data-content />
-            <button class="save-btn" data-action="save"></button>
-            <button class="delete-btn" data-action="remove"></button>
+            <div class="data">
+                <input class="title" value="" />
+                <input class="content" value="" />
+            </div>
+            <div class="button-wrapper">
+                <button class="save-btn" data-action="save"></button>
+                <button class="delete-btn" data-action="remove"></button>
+            </div>
         </div>
+        
+        <ul id="child-list"></ul>
     `;
 
     document.querySelector("#sections-list").appendChild(section);
@@ -62,8 +114,14 @@ const removeSection = (button: HTMLElement) => {
 
 const saveSection = async (button: HTMLElement) => {
     const parentId = button.closest("li").getAttribute('data-parent-id');
-    const title = (button.parentElement.querySelector('input[data-title]') as HTMLInputElement).value;
-    const content = (button.parentElement.querySelector('input[data-content]') as HTMLInputElement).value;
+    const title = (button.parentElement.querySelector('.title') as HTMLElement).innerText;
+    const content =  (button.parentElement.querySelector('.content') as HTMLElement).innerText;
+
+    if (title === "" || content === "") {
+        alert("Title and content can't be empty");
+
+        return;
+    }
 
     const response = await httpPostRequest('/api/section', {
         title: title,
@@ -78,20 +136,7 @@ const saveSection = async (button: HTMLElement) => {
 
         const section = document.createElement("li");
         section.setAttribute('data-id', String(data.id));
-        section.innerHTML = `
-            <div class="section-item">
-                 <div class="data">
-                    <span class="title">${data.title}</span>
-                    <span class="content">${data.content}</span>
-                </div>
-                <div class="button-wrapper">
-                    <button class="edit-btn" data-id="${data.id}" data-action="edit"></button>
-                    <button class="delete-btn" data-id="${data.id}" data-action="delete"></button>
-                    <button class="add-btn" data-id="${data.id}" data-action="add-child"></button>
-                </div>
-            </div>
-            <ul></ul>
-        `;
+        section.innerHTML = createSectionItem(String(data.id), data.title, data.content);
 
         document.querySelector("#sections-list").appendChild(section);
     } else {
@@ -104,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
 
         const target = event.target as HTMLElement;
-        console.log(target.getAttributeNames());
         switch (target.getAttribute('data-action')) {
             case "add-parent":
                 addParentSection();
@@ -118,10 +162,14 @@ document.addEventListener('DOMContentLoaded', function () {
             case "delete":
                 deleteSection(target).then();
                 break;
-
-
             case "edit":
-                editSection(target).then();
+                editSection(target);
+                break;
+            case "submit-edit":
+                submitEdit(target).then();
+                break;
+            case "cancel-edit":
+                cancelEdit(target);
                 break;
             case "data-add-child":
                 break;

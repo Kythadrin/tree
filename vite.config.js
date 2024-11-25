@@ -13,7 +13,8 @@ export default defineConfig({
                 login: 'assets/scripts/pages/login.ts',
                 sections: 'assets/scripts/pages/sections.ts',
             },
-        }
+        },
+        minify: false,
     },
     server: {
         strictPort: true,
