@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -15,35 +17,86 @@ class Section
     #[ORM\Column(type: "integer")]
     private int $id;
 
-    #[ORM\Column(name: "has_parent", type: "boolean")]
-    private bool $hasParent;
+    #[ORM\Column(type: "string", length: 255)]
+    private string $title;
 
-    #[ORM\Column(name: "parent_id", type: "integer")]
-    private int $parentId;
+    #[ORM\Column(type: "string", length: 255)]
+    private string $content;
 
+    #[ORM\ManyToOne(targetEntity: Section::class, inversedBy: "children")]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?Section $parent;
+
+    #[ORM\OneToMany(targetEntity: Section::class, mappedBy: "parent", cascade: ["persist", "remove"], orphanRemoval: true)]
+    private Collection $children;
+
+    public function __construct(
+        string $title,
+        string $content,
+        ?Section $parent = null
+    ) {
+        $this->title = $title;
+        $this->content = $content;
+        $this->children = new ArrayCollection();
+        $this->parent = $parent;
+    }
 
     public function getId(): int
     {
         return $this->id;
     }
 
-    public function isHasParent(): bool
+    public function getTitle(): string
     {
-        return $this->hasParent;
+        return $this->title;
     }
 
-    public function setHasParent(bool $hasParent): void
+    public function setTitle(string $title): void
     {
-        $this->hasParent = $hasParent;
+        $this->title = $title;
     }
 
-    public function getParentId(): int
+    public function getContent(): string
     {
-        return $this->parentId;
+        return $this->content;
     }
 
-    public function setParentId(int $parentId): void
+    public function setContent(string $content): void
     {
-        $this->parentId = $parentId;
+        $this->content = $content;
+    }
+
+    public function getParent(): ?Section
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?Section $parent): void
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getChildren(): Collection
+    {
+        return $this->children;
+    }
+
+    public function addChild(Section $child): void
+    {
+        if (!$this->children->contains($child)) {
+            $this->children->add($child);
+            $child->setParent($this);
+        }
+    }
+
+    public function removeChild(Section $child): void
+    {
+        if ($this->children->contains($child)) {
+            $this->children->removeElement($child);
+            $child->setParent(null);
+        }
     }
 }
