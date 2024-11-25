@@ -12,11 +12,9 @@
         </div>
     </div>
 
-    {% if section.children is not empty %}
-        <ul id="child-list">
-            {% for child in section.children %}
-                {% include 'components/_section.html.twig' with {'section': child} %}
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <ul id="child-list-{{ section.id }}">
+        {% for child in section.children %}
+            {% include 'components/_section.html.twig' with {'section': child} %}
+        {% endfor %}
+    </ul>
 </li>

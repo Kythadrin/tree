@@ -6,6 +6,7 @@ namespace App\Api;
 
 use App\Entity\Section;
 use App\Model\Section as SectionModel;
+use App\Model\SectionOutput;
 use App\Repository\SectionRepository;
 use App\Service\SectionService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,14 +31,14 @@ class Sections
             /** @var string $data */
             $data = file_get_contents('php://input');
 
-            /** @var array{title: string, content: string, parent: SectionModel} $input */
+            /** @var array{title: string, content: string, parent?: int} $input */
             $input = json_decode($data, true);
 
             $section = new SectionModel(
                 null,
                 trim($input['title']),
                 trim($input['content']),
-                $input['parent'],
+                $this->sectionRepository->findOneById((int) $input['parent']),
             );
 
             if (empty($section->title) || empty($section->content)) {
@@ -60,11 +61,11 @@ class Sections
             }
 
             http_response_code(201);
-            echo json_encode(new SectionModel(
+            echo json_encode(new SectionOutput(
                 $createdSection->getId(),
                 $createdSection->getTitle(),
                 $createdSection->getContent(),
-                $createdSection->getParent(),
+                $createdSection->getParent()->getId(),
             ));
         }
     }
@@ -107,11 +108,11 @@ class Sections
             }
 
             http_response_code(201);
-            echo json_encode(new SectionModel(
+            echo json_encode(new SectionOutput(
                 $updatedSection->getId(),
                 $updatedSection->getTitle(),
                 $updatedSection->getContent(),
-                $updatedSection->getParent(),
+                $updatedSection->getParent()->getId(),
             ));
         }
     }

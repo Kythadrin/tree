@@ -11,10 +11,15 @@ button {
     outline: none;
 
     &:disabled {
-        background-color: var(--color-disabled-bg);
-        color: var(--color-disabled-text);
-        cursor: not-allowed;
-        box-shadow: none;
+        mask: unset !important;
+        -webkit-mask: unset !important;
+        background-color: unset !important;
+        width: 1em;
+        height: 1em;
+        border: 2px solid transparent;
+        border-top: 2px solid var(--color-primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
     }
 
     &.primary {
@@ -47,5 +52,14 @@ button {
             background-color: var(--color-secondary-active);
             color: var(--color-text-secondary-active);
         }
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
     }
 }

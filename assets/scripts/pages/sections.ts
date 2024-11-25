@@ -4,7 +4,7 @@ interface IContainer {
     id: number,
     title: string,
     content: string,
-    parent?: IContainer,
+    parent?: number,
 }
 
 const createSectionItem = (id: string, title: string, content: string) => {
@@ -22,10 +22,10 @@ const createSectionItem = (id: string, title: string, content: string) => {
     `;
 };
 
-const editSection = (button: HTMLElement) => {
-    const parentId = button.closest("li").getAttribute('data-id') ?? null;
+const editSection = (button: HTMLButtonElement) => {
+    const parentId = button.closest("li").getAttribute("data-parent-id") ?? null;
     const item = button.closest(".section-item");
-    const id =  button.getAttribute('data-id');
+    const id =  button.getAttribute("data-id");
 
     item.innerHTML = `
         <div class="id">${id}</div>
@@ -36,7 +36,7 @@ const editSection = (button: HTMLElement) => {
             </label>
             <label>
                 Content: 
-                 <input class="content" value="${(item.querySelector('.content') as HTMLElement).innerText}" />
+                <input class="content" value="${(item.querySelector('.content') as HTMLElement).innerText}" />
             </label>
             <label>
                 Parent section id: 
@@ -50,22 +50,24 @@ const editSection = (button: HTMLElement) => {
     `;
 };
 
-const cancelEdit = (button: HTMLElement) => {
+const cancelEdit = (button: HTMLButtonElement) => {
     const item = button.closest(".section-item");
 
     item.innerHTML = createSectionItem(
-        button.getAttribute('data-id'),
-        (item.querySelector('.title') as HTMLInputElement).value,
-        (item.querySelector('.content') as HTMLInputElement).value,
+        button.getAttribute("data-id"),
+        (item.querySelector(".title") as HTMLInputElement).value,
+        (item.querySelector(".content") as HTMLInputElement).value,
     );
 };
 
-const submitEdit = async (button: HTMLElement) => {
-    const item = button.closest(".section-item");
-    const id = button.getAttribute('data-id');
-    const title = (item.querySelector('.title') as HTMLInputElement).value;
-    const content = (item.querySelector('.content') as HTMLInputElement).value;
-    const parentId = (item.querySelector('.parentId') as HTMLInputElement).value;
+const submitEdit = async (button: HTMLButtonElement) => {
+    button.disabled = true;
+    const section = button.closest(".section-item");
+    const id = button.getAttribute("data-id");
+    const title = (section.querySelector(".title") as HTMLInputElement).value;
+    const content = (section.querySelector(".content") as HTMLInputElement).value;
+    const parentId = (section.querySelector(".parentId") as HTMLInputElement).value;
+    const sectionContainer = section.closest("li");
 
     if (id === "" || title === "" || content === "") {
         alert("Id, title and content can't be blank");
@@ -78,23 +80,37 @@ const submitEdit = async (button: HTMLElement) => {
     if (response.ok) {
         const data: IContainer = await response.json();
 
-        item.innerHTML = createSectionItem(String(data.id), data.title, data.content);
+        section.innerHTML = createSectionItem(String(data.id), data.title, data.content);
+        if (data.parent !== undefined) {
+            sectionContainer.setAttribute("data-parent-id", String(data.id));
+            document.querySelector(`#child-list-${data.parent}`).appendChild(sectionContainer);
+        }
+
+        button.disabled = false;
     } else {
-        alert('Error editing section');
+        alert("Error editing section");
+
+        button.disabled = false;
     }
 };
 
-const deleteSection = async (button: HTMLElement) => {
+const deleteSection = async (button: HTMLButtonElement) => {
+    button.disabled = true;
+
     const sectionId = button.getAttribute('data-id');
     const sectionElement = button.closest('li');
 
-    if (confirm('Are you sure you want to delete this section? All child sections will be delete too.')) {
+    if (confirm("Are you sure you want to delete this section? All child sections will be delete too.")) {
         const response = await httpDeleteRequest(`/api/section/${sectionId}`);
 
         if (response.ok) {
             sectionElement.remove();
+
+            button.disabled = false;
         } else {
-            alert('Error deleting section');
+            alert("Error deleting section");
+
+            button.disabled = false;
         }
     }
 };
@@ -124,7 +140,7 @@ const addParentSection = () => {
             </div>
         </div>
         
-        <ul id="child-list"></ul>
+        <ul data-child-list></ul>
     `;
 
     document.querySelector("#sections-list").appendChild(section);
@@ -134,17 +150,19 @@ const removeSection = (button: HTMLElement) => {
     button.closest("li").remove();
 };
 
-const saveSection = async (button: HTMLElement) => {
-    const parentId = button.closest("li").getAttribute('data-parent-id');
-    const title = (button.parentElement.querySelector('.title') as HTMLElement).innerText;
-    const content =  (button.parentElement.querySelector('.content') as HTMLElement).innerText;
+const saveSection = async (button: HTMLButtonElement) => {
+    button.disabled = true;
+
+    const title = (button.closest(".section-item").querySelector(".title") as HTMLInputElement).value;
+    const content = (button.closest(".section-item").parentElement.querySelector(".content") as HTMLInputElement).value;
+    const parentId = (button.closest(".section-item").parentElement.querySelector(".parentId") as HTMLInputElement).value ?? null;
 
     if (title === "" || content === "") {
         alert("Title and content can't be empty");
         return;
     }
 
-    const response = await httpPostRequest('/api/section', {
+    const response = await httpPostRequest("/api/section", {
         title: title,
         content: content,
         parent: parentId,
@@ -154,39 +172,49 @@ const saveSection = async (button: HTMLElement) => {
         const data: IContainer = await response.json();
 
         const section = button.closest(".section-item");
-        section.setAttribute('data-id', String(data.id));
+        const sectionContainer = section.closest("li");
         section.innerHTML = createSectionItem(String(data.id), data.title, data.content);
+        sectionContainer.querySelector("[data-child-list]").id = `child-list-${data.id}`
+
+        if (data.parent !== undefined) {
+            sectionContainer.setAttribute("data-parent-id", String(data.id));
+            document.querySelector(`#child-list-${data.parent}`).appendChild(sectionContainer);
+        }
+
+        button.disabled = false;
     } else {
-        alert('Error adding section');
+        alert("Error adding section");
+
+        button.disabled = false;
     }
 };
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("click", (event: MouseEvent) => {
         event.preventDefault();
 
         const target = event.target as HTMLElement;
-        switch (target.getAttribute('data-action')) {
+        switch (target.getAttribute("data-action")) {
             case "add-parent":
                 addParentSection();
                 break;
             case "remove":
-                removeSection(target);
+                removeSection(target as HTMLButtonElement);
                 break;
             case "save":
-                saveSection(target).then();
+                saveSection(target as HTMLButtonElement).then();
                 break;
             case "delete":
-                deleteSection(target).then();
+                deleteSection(target as HTMLButtonElement).then();
                 break;
             case "edit":
-                editSection(target);
+                editSection(target as HTMLButtonElement);
                 break;
             case "submit-edit":
-                submitEdit(target).then();
+                submitEdit(target as HTMLButtonElement).then();
                 break;
             case "cancel-edit":
-                cancelEdit(target);
+                cancelEdit(target as HTMLButtonElement);
                 break;
             case "data-add-child":
                 break;
