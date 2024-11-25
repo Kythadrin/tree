@@ -62,6 +62,7 @@ const cancelEdit = (button: HTMLButtonElement) => {
 
 const submitEdit = async (button: HTMLButtonElement) => {
     button.disabled = true;
+
     const section = button.closest(".section-item");
     const id = button.getAttribute("data-id");
     const title = (section.querySelector(".title") as HTMLInputElement).value;
@@ -221,13 +222,17 @@ const addChildSection = (button: HTMLButtonElement) => {
     document.querySelector(`#child-list-${parentId}`).appendChild(section);
 }
 
-const logout = async () => {
+const logout = async (button: HTMLButtonElement) => {
+    button.disabled = true;
+
     const response = await httpPostRequest("/api/logout");
 
     if (response.ok) {
         document.location.href = "/";
     } else {
         alert("User not logged out. Try again");
+
+        button.disabled = false;
     }
 };
 
@@ -262,7 +267,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 addChildSection(target as HTMLButtonElement);
                 break;
             case "logout":
-
+                logout(target as HTMLButtonElement).then();
                 break;
         }
     });

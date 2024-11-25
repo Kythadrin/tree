@@ -88,7 +88,6 @@ class User
                 return;
             }
 
-
             http_response_code(201);
         }
     }

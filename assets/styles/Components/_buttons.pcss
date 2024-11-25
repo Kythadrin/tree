@@ -15,15 +15,17 @@ button {
     }
 
     &:disabled {
+        content: "";
         mask: unset !important;
         -webkit-mask: unset !important;
         background-color: unset !important;
-        width: 1em;
-        height: 1em;
-        border: 2px solid transparent;
-        border-top: 2px solid var(--color-primary);
+        width: 25px;
+        height: 52px;
+        border: 2px solid transparent !important;
+        border-top: 2px solid var(--color-primary) !important;
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
+        color: transparent !important;
     }
 
     &.primary {

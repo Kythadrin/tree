@@ -6,7 +6,9 @@ const passwordElement = formElement.querySelector("#password") as HTMLInputEleme
 const submitButtonElement = formElement.querySelector("#submit");
 const backButtonElement = formElement.querySelector("#back");
 
-const registration = async () => {
+const registration = async (button: HTMLButtonElement) => {
+    button.disabled = true;
+
     formElement.querySelectorAll(".error").forEach((item) => {
         item.remove();
     });
@@ -45,6 +47,8 @@ const registration = async () => {
         error.innerText = data.message;
 
         formElement.appendChild(error);
+
+        button.disabled = false;
     }
 }
 
@@ -54,7 +58,7 @@ document.addEventListener("click", (event: MouseEvent) => {
     const target = event.target as HTMLElement;
     switch (target) {
         case submitButtonElement:
-            registration();
+            registration(target as HTMLButtonElement).then();
             break;
         case backButtonElement:
             document.location.href = '/';

@@ -64,11 +64,16 @@
         gap: 10px;
 
         button {
-            padding: 15px;
+            padding: 14px;
             background-color: transparent;
 
             @media (--phone) {
                 padding: 12px;
+            }
+
+            &:disabled {;
+                width: 1em;
+                height: 1em;
             }
 
             &.edit-btn {
