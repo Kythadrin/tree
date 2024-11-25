@@ -153,9 +153,9 @@ const removeSection = (button: HTMLElement) => {
 const saveSection = async (button: HTMLButtonElement) => {
     button.disabled = true;
 
-    const title = (button.closest(".section-item").querySelector(".title") as HTMLInputElement).value;
-    const content = (button.closest(".section-item").parentElement.querySelector(".content") as HTMLInputElement).value;
-    const parentId = (button.closest(".section-item").parentElement.querySelector(".parentId") as HTMLInputElement).value ?? null;
+    const title = (button.closest("li").querySelector(".title") as HTMLInputElement).value;
+    const content = (button.closest("li").querySelector(".content") as HTMLInputElement).value;
+    const parentId = (button.closest("li").querySelector(".parentId") as HTMLInputElement).value ?? null;
 
     if (title === "" || content === "") {
         alert("Title and content can't be empty");
@@ -189,6 +189,38 @@ const saveSection = async (button: HTMLButtonElement) => {
     }
 };
 
+const addChildSection = (button: HTMLButtonElement) => {
+    const parentId = button.getAttribute('data-id')
+    const section = document.createElement("li");
+    section.innerHTML = `
+        <div class="section-item">
+            <div class="id"></div>
+            <div class="data input">
+                <label>
+                    Title: 
+                    <input class="title" value="" />
+                </label>
+                <label>
+                    Content: 
+                    <input class="content" value="" />
+                </label>
+                <label>
+                    Parent section id: 
+                    <input class="parentId" value="${parentId}" disabled />
+                </label>
+            </div>
+            <div class="button-wrapper">
+                <button class="save-btn" data-action="save"></button>
+                <button class="delete-btn" data-action="remove"></button>
+            </div>
+        </div>
+        
+        <ul data-child-list></ul>
+    `;
+
+    document.querySelector(`#child-list-${parentId}`).appendChild(section);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("click", (event: MouseEvent) => {
         event.preventDefault();
@@ -216,7 +248,8 @@ document.addEventListener("DOMContentLoaded", function () {
             case "cancel-edit":
                 cancelEdit(target as HTMLButtonElement);
                 break;
-            case "data-add-child":
+            case "add-child":
+                addChildSection(target as HTMLButtonElement);
                 break;
         }
     });
